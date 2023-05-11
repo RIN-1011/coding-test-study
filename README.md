@@ -4,3 +4,6 @@
 ## CodeUp
 * 기초 100제 문제 풀이
 <br />
+
+## algorithm
+* 그리디
