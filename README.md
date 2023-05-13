@@ -8,3 +8,4 @@
 ## algorithm
 * 그리디
 * 구현
+* DFS/BFS
