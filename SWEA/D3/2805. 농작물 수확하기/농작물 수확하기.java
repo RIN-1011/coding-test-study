@@ -21,7 +21,6 @@ public class Solution {
 				}
 			}
 			
-			int tmp = N/2+1; //마름모 만들기 위한 변수 (시작 위치)
 			int sum = 0; //총 수익
 			for(int i=0; i<N; i++) {
 				if(i<=N/2) { //위쪽일 경우
