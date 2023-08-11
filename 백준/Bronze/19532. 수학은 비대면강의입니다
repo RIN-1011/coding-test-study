@@ -7,7 +7,7 @@ public class _19532 {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 
-		//ÀÔ·Â ¹Ş±â
+		//ì…ë ¥ ë°›ê¸°
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
@@ -20,10 +20,10 @@ public class _19532 {
 		e = Integer.parseInt(st.nextToken());
 		f = Integer.parseInt(st.nextToken());
 		
-		//ÇØ°¡ µÉ ¼ö ÀÖ´Â ¸ğµç ¼ö Å½»ö
+		//í•´ê°€ ë  ìˆ˜ ìˆëŠ” ëª¨ë“  ìˆ˜ íƒìƒ‰
 		for(int x=-999; x<1000; x++) {
 			for(int y=-999; y<1000; y++) {
-				//¹æÁ¤½Ä ÇØ°áµÇ¸é ´ä Ãâ·Â
+				//ë°©ì •ì‹ í•´ê²°ë˜ë©´ ë‹µ ì¶œë ¥
 				if((a*x+b*y == c) && (d*x+e*y == f)) {
 					System.out.println(x + " " + y);
 					break;
