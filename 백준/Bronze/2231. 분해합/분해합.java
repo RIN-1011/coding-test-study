@@ -2,14 +2,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-//ºĞÇØÇÕ
+//ë¶„í•´í•©
 
 public class _2231 {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
-		//ÀÔ·Â ¹Ş±â
+		//ì…ë ¥ ë°›ê¸°
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		int N = Integer.parseInt(br.readLine());
@@ -19,14 +19,14 @@ public class _2231 {
 			int sum = 0;
 			int temp = i;
 			
-			sum += i; //ÀÚ±â ÀÚ½Å ´õÇÏ±â
+			sum += i; //ìê¸° ìì‹  ë”í•˜ê¸°
 			
-			//ÀÚ¸®¼ö °¢°¢ ´õÇÏ±â
+			//ìë¦¬ìˆ˜ ê°ê° ë”í•˜ê¸°
 			while(temp != 0) {
-				sum += temp%10; //³¡ ÀÚ¸®¼öºÎÅÍ µ¡¼À
+				sum += temp%10; //ë ìë¦¬ìˆ˜ë¶€í„° ë§ì…ˆ
 				temp /= 10;
 			}
-			//ºĞÇØÇÕÀÌ N°ú °°À» °æ¿ì °¡Àå ÀÛÀº »ı¼ºÀÚ Ãâ·Â
+			//ë¶„í•´í•©ì´ Nê³¼ ê°™ì„ ê²½ìš° ê°€ì¥ ì‘ì€ ìƒì„±ì ì¶œë ¥
 			if(sum == N) {
 				result = i;
 				break;
