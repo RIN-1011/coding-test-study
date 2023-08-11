@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-//ºí·¢Àè
+//ë¸”ëž™ìž­
 
 public class _2798 {
 
@@ -11,7 +11,7 @@ public class _2798 {
 		// TODO Auto-generated method stub
 		int N, M;
 		
-		//ÀÔ·Â ¹Þ±â
+		//ìž…ë ¥ ë°›ê¸°
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
@@ -23,24 +23,24 @@ public class _2798 {
 		String s = br.readLine();
 		String[] str = s.split(" ");
 		
-		//intÇü º¯È¯
+		//intí˜• ë³€í™˜
 		for(int i=0; i<N; i++) {
 			arr[i] = Integer.parseInt(str[i]);
 		}
 		
-		//M°úÀÇ Â÷ÀÌ
+		//Mê³¼ì˜ ì°¨ì´
 		int diff = Integer.MAX_VALUE;
-		//ÃÖÁ¾ ÇÕ
+		//ìµœì¢… í•©
 		int sum = 0;
 		
 		for(int i=0; i<N; i++) {
 			for(int j=i+1; j<N; j++) {
 				for(int k=j+1; k<N; k++) {
-					int temp = arr[i] + arr[j] + arr[k]; //¼¼ Ä«µå ÇÕ
-					//MÀ» ³ÑÁö ¾ÊÀ¸¸é¼­ ÃÖ´ëÇÑ °¡±î¿î °æ¿ì
+					int temp = arr[i] + arr[j] + arr[k]; //ì„¸ ì¹´ë“œ í•©
+					//Mì„ ë„˜ì§€ ì•Šìœ¼ë©´ì„œ ìµœëŒ€í•œ ê°€ê¹Œìš´ ê²½ìš°
 					if(M-temp>=0 && M-temp<diff) {
-						sum = temp; //°á°ú ¹Ý¿µ
-						diff = M - temp; //Â÷ ¹Ý¿µ
+						sum = temp; //ê²°ê³¼ ë°˜ì˜
+						diff = M - temp; //ì°¨ ë°˜ì˜
 					}
 					
 				}
