@@ -1,81 +1,72 @@
 import java.util.*;
 import java.io.*;
 
-class Graph implements Comparable<Graph>{
-	//a와 b 연결
-	int a;
-	int b;
-	//비용
-	int weight;
+class Edge implements Comparable<Edge>{
+	int v; //도착 정점
+	int w; //가중치
 	
-	public Graph(int a, int b, int weight) {
+	public Edge(int v, int w) {
 		super();
-		this.a = a;
-		this.b = b;
-		this.weight = weight;
+		this.v = v;
+		this.w = w;
 	}
-
+	
 	@Override
-	public int compareTo(Graph o) {
-		//비용 오름차순
-		return this.weight-o.weight;
+	public int compareTo(Edge o) {
+		//가중치 오름차순 정렬
+		return this.w - o.w;
 	}
 }
 public class Main {
-	static List<Graph> list;
-	static int[] p; //루트노드
-	
-	public static int find(int a) {
-		if(p[a] == a) {
-			return a;
-		}
-		return p[a] = find(p[a]);
-	}
-	
-	public static boolean union(int a, int b) {
-		//루트노드 찾기
-		int pa = find(a);
-		int pb = find(b);
-		
-		//이미 같은 그룹일 경우
-		if(pa==pb) {
-			return false;
-		}
-		//다른 그룹이면 union
-		p[pa] = pb;
-		return true;
-	}
+	static ArrayList<ArrayList<Edge>> list;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
-		int N = Integer.parseInt(br.readLine()); //컴퓨터의 수 (노드) 
-		int M = Integer.parseInt(br.readLine()); //선의 수 (간선)
+		int N = Integer.parseInt(br.readLine()); //컴퓨터의 수(정점)
+		int M = Integer.parseInt(br.readLine()); //선의 수(간선)
 		
 		list = new ArrayList<>();
+		for (int i = 0; i <= N; i++) {
+			list.add(new ArrayList<>());
+		}
+		
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			list.add(new Graph(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st.nextToken());
+			//양방향 연결
+			list.get(a).add(new Edge(b, c));
+			list.get(b).add(new Edge(a, c));
 		}
 		
-		//비용 적은 순서대로 정렬
-		Collections.sort(list);
+		PriorityQueue<Edge> q = new PriorityQueue<>();
+		boolean visited[] = new boolean[N+1];
+		int result = 0; //최소비용
 		
-		//make-set
-		p = new int[N+1];
-		for (int i = 1; i <= N; i++) {
-			p[i] = i;
-		}
-		//크루스칼
-		int cost = 0;
-		for (int i = 0; i < list.size(); i++) {
-			//사이클이 아닐 경우 연결하기
-			if(union(list.get(i).a, list.get(i).b)) {
-				cost += list.get(i).weight;
+		//시작 정점
+		q.add(new Edge(1, 0));
+		
+		int cnt = 0; //처리한 간선 수
+		while(!q.isEmpty()) {
+			Edge e = q.remove();
+			//아직 방문하지 않았으면 탐색
+			if(!visited[e.v]) {
+				visited[e.v] = true; //방문처리
+				result += e.w;
+				
+				for (Edge edge : list.get(e.v)) {
+					//아직 방문하지 않았다면 큐에 삽입
+					if(!visited[edge.v]) {
+						q.add(edge);
+					}
+				}
 			}
 		}
-		System.out.println(cost);
+		
+		System.out.println(result);
 	}
 
 }
