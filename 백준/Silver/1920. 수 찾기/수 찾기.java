@@ -11,16 +11,20 @@ public class Main {
 		int N = Integer.parseInt(br.readLine());
 		st = new StringTokenizer(br.readLine()); //A 리스트
 		
-		HashSet<Integer> hash = new HashSet<>();
+		int[] arr = new int[N];
 		for(int i=0; i<N; i++) {
-			hash.add(Integer.parseInt(st.nextToken()));
+			arr[i] = Integer.parseInt(st.nextToken());
 		}
+		Arrays.sort(arr); //이진 탐색을 위한 배열 정렬
 		
 		int M = Integer.parseInt(br.readLine());
 		st = new StringTokenizer(br.readLine());
+		
 		for(int i=0; i<M; i++) {
+			int num = Integer.parseInt(st.nextToken());
+			
 			//A 안에 존재할 경우
-			if(hash.contains(Integer.parseInt(st.nextToken()))) {
+			if(Arrays.binarySearch(arr, num) >=0) {
 				sb.append(1).append("\n");
 			}
 			else {
