@@ -1,29 +1,32 @@
 import java.util.*;
 import java.io.*;
 
-//설탕 배달
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		int N = Integer.parseInt(br.readLine());
-		int cnt = 0;
+		int N = Integer.parseInt(br.readLine()); //배달할 설탕 무게
+		int result = 0; //봉지 개수
 		
 		while(N>0) {
-			if(N%5 == 0) { //5로 나누어 떨어질 경우
-				cnt += N/5; //봉지 개수 더하기
+			if(N%5==0) { //5킬로그램으로 나뉠 경우
+				result += N/5; //5킬로그램 봉지 개수 추가
+				N = 0;
 				break;
 			}
-			N -= 3; //5로 나누어 떨어지지 않으면 3 빼기
-			cnt++; //봉지 개수 증가
-			if(N<0) { //3으로도 나누어 떨어지지 않으면 N이 음수
-				cnt = -1;
-				break;
+			else { //3킬로그램 봉지 개수 추가
+				N-=3;
+				result++;
 			}
 		}
-		System.out.println(cnt);
-
+		
+		if(N!=0) { //나누어 떨어지지 않을 경우
+			System.out.println(-1);
+		}
+		else {
+			System.out.println(result);
+		}
 	}
 
 }
