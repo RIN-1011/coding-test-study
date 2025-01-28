@@ -1,71 +1,91 @@
 import java.util.*;
 import java.io.*;
 
-class Edge{
-	int v;
-	int w;
+class Bus implements Comparable<Bus> {
+	int index; //정점
+	int w; //비용
 	
-	public Edge(int v, int w) {
-		super();
-		this.v = v;
+	public Bus(int index, int w) {
+		this.index = index;
 		this.w = w;
+	}
+	
+	@Override
+	public int compareTo(Bus o) {
+		return this.w - o.w; //오름차순 정렬
 	}
 }
 
 public class Main {
-	static ArrayList<ArrayList<Edge>> list;
+	static int N, M;
+	static int[][] arr;
+	static int[] distance;
+	static int start, end;
+	static boolean[] visited;
+	
+	static void dijkstra() {
+		PriorityQueue<Bus> q = new PriorityQueue<>();
+		distance[start] = 0; //시작 정점
+		q.add(new Bus(start, 0));
+		
+		while(!q.isEmpty()) {
+			Bus now = q.poll();
+			
+			if(visited[now.index]) { //이미 방문했을 경우 패스
+				continue;
+			}
+			visited[now.index] = true; //방문 처리
+			
+			//연결된 도시 확인
+			for(int i=1; i<=N; i++) {
+				//연결된 경우만, 현재 거리보다 거쳐가는 거리가 더 짧을 경우
+				if(arr[now.index][i]!=Integer.MAX_VALUE && distance[i] > distance[now.index]+arr[now.index][i]) {
+					//비용 갱신
+					distance[i] = distance[now.index]+arr[now.index][i];
+					q.add(new Bus(i, distance[i]));
+				}
+			}
+		}
+	}
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
-		int N = Integer.parseInt(br.readLine()); //도시 개수 (정점)
-		int M = Integer.parseInt(br.readLine()); //버스 개수 (간선)
+		N = Integer.parseInt(br.readLine()); //도시의 개수
+		M = Integer.parseInt(br.readLine()); //버스의 개수
 		
-		list = new ArrayList<>();
-		for (int i = 0; i < N+1; i++) {
-			list.add(new ArrayList<>());
+		//인접 행렬로 다익스트라 구현
+		arr = new int[N+1][N+1];
+		//인접 행렬 값 초기화
+		for(int i=0; i<=N; i++) {
+			Arrays.fill(arr[i], Integer.MAX_VALUE);
 		}
 		
-		for (int i = 0; i < M; i++) {
+		//버스 비용 입력
+		for(int i=0; i<M; i++) {
 			st = new StringTokenizer(br.readLine());
-			list.get(Integer.parseInt(st.nextToken())).add(new Edge(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			int cost = Integer.parseInt(st.nextToken());
+			
+			arr[a][b] = Math.min(arr[a][b], cost);
 		}
 		
+		//시작, 도착 정점 입력
 		st = new StringTokenizer(br.readLine());
-		int start = Integer.parseInt(st.nextToken());
-		int end = Integer.parseInt(st.nextToken());
+		start = Integer.parseInt(st.nextToken());
+		end = Integer.parseInt(st.nextToken());
 		
-		boolean[] visited = new boolean[N+1]; //방문 배열
-		int[] distance = new int[N+1]; //거리 배열
-		//거리 초기화
-		for (int i = 0; i <= N; i++) {
-			distance[i] = Integer.MAX_VALUE;
-		}
-		//시작 정점
-		distance[start] = 0;
-		//모든 정점 돌면 끝
-		for (int i = 0; i < N; i++) {
-			int min = Integer.MAX_VALUE; //현재 기준 가장 가중치 적은 간선
-			int minV = 0; //가중치 적은 정점
-			for (int j = 0; j <= N; j++) {
-				//아직 방문하지 않았고 최솟값인 경우
-				if(!visited[j] && min > distance[j]) {
-					min = distance[j];
-					minV = j;
-				}
-			}
-			//방문처리
-			visited[minV] = true;
-			
-			//인접 정점 탐색
-			for(Edge e : list.get(minV)) {
-				//선택된 노드 가중치 > 현재 노드 거쳐서 선택된 노드 가는 경우 비교
-				if(distance[e.v] > distance[minV]+e.w) {
-					distance[e.v] = distance[minV]+e.w;
-				}
-			}
-			
-		}
+		//거리 배열 초기화
+		distance = new int[N+1];
+		Arrays.fill(distance, Integer.MAX_VALUE);
+		
+		//방문 배열 선언
+		visited = new boolean[N+1];
+		
+		dijkstra();
+		
 		System.out.println(distance[end]);
 	}
 
