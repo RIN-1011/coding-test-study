@@ -85,8 +85,6 @@ public class Main {
 		int v1 = Integer.parseInt(st.nextToken()); //거쳐야 하는 정점 v1
 		int v2 = Integer.parseInt(st.nextToken()); //거쳐야 하는 정점 v2
 		
-		int min = Integer.MAX_VALUE;
-		
 		//경로 계산
 		int path1 = dijkstra(1, v1);
 	    int path2 = dijkstra(v1, v2);
