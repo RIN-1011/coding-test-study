@@ -1,94 +1,100 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
+
+class State {
+	int i;
+	int j;
+	int date; //날짜
+	
+	State(int i, int j, int date){
+		this.i = i;
+		this.j = j;
+		this.date = date;
+	}
+}
 
 public class Main {
-
+	static int[][] box;
+	static int M, N; //가로, 세로
+	static int f; //안익은 토마토 개수
+	static int result; //최소 일수
+	static Queue<State> q;
+	//상하좌우
+	static int[] dx = {-1, 1, 0, 0};
+	static int[] dy = {0, 0, -1, 1};
+	
+	static void bfs() {
+		while(!q.isEmpty()) {
+			State now = q.poll();
+			
+			//상하좌우 체크
+			for(int k=0; k<4; k++) {
+				//이동할 위치
+				int x = dx[k] + now.i;
+				int y = dy[k] + now.j;
+				
+				//범위 벗어나면 패스
+				if(x<0 || x>=N || y<0 || y>=M) {
+					continue;
+				}
+				//토마토 없거나 이미 익었으면 패스
+				if(box[x][y]==-1 || box[x][y]==1) {
+					continue;
+				}
+				//아직 안익었을 경우
+				q.add(new State(x, y, (now.date+1))); //큐 삽입
+				box[x][y] = 1; //익히기
+				f -= 1; //안익은 토마토 개수 줄이기
+				
+				//토마토 다 익었을 경우
+				if(f==0) {
+					result = now.date+1;
+					break;
+				}
+			}
+		}
+		//토마토 모두 안익었을 경우
+		if(f!=0) {
+			result = -1;
+		}
+	}
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringTokenizer st;
 		
-		int M = Integer.parseInt(st.nextToken()); //가로
-		int N = Integer.parseInt(st.nextToken()); //세로
+		st = new StringTokenizer(br.readLine());
+		M = Integer.parseInt(st.nextToken()); //가로
+		N = Integer.parseInt(st.nextToken()); //세로
 		
-		int[][] arr = new int[N][M]; //토마토 상자
-		int[][] date = new int[N][M]; //날짜
+		//초기화
+		box = new int[N][M];
+		f = 0;
+		result = 0;
+		q = new LinkedList<>();
 		
+		//상자 상태
 		for(int i=0; i<N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for(int j=0; j<M; j++) {
-				arr[i][j] = Integer.parseInt(st.nextToken());
+				box[i][j] = Integer.parseInt(st.nextToken());
+				
+				//안익은 토마토 카운트
+				if(box[i][j]==0) f++;
+				//익은 토마토 큐 저장
+				else if(box[i][j]==1) q.add(new State(i, j, 0));
 			}
 		}
 		
-		//초기부터 모든 토마토 익어있을 경우
-		int c;
-		loopOut:
-		for(c=0; c<N; c++) {
-			for(int j=0; j<M; j++) {
-				if(arr[c][j]==0) { //안익은 토마토 발견할 경우
-					break loopOut; //반복문 탈출
-				}
-			}
-		}
-		if(c==N) { //반복문 끝까지 다 돌았으면 모든 토마토가 익은 것이므로
+		//모든 토마토가 익어있는 경우
+		if(f==0) {
 			System.out.println(0);
-			return; //0 출력하고 종료
+		}
+		else {
+			bfs();
+			System.out.println(result);
 		}
 		
-		
-		//상하좌우
-		int[] dx = {-1, 1, 0, 0};
-		int[] dy = {0, 0, -1, 1};
-		
-		Queue<int[]> q = new LinkedList<>();
-		//초기 익은 토마토 큐 삽입
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if(arr[i][j]==1) { //익었으면
-					q.add(new int[] {i, j}); //큐에 삽입
-				}
-			}
-		}
-		
-		//bfs
-		while(!q.isEmpty()) { //큐가 비어있지 않을 때까지 bfs
-			int[] p = q.remove(); //후입선출
-			int x = p[0]; //x 좌표
-			int y = p[1]; //y 좌표
-			int time = date[x][y]; //최소 일수
-			
-			for(int i=0; i<4; i++) {
-				int nx = x+dx[i];
-				int ny = y+dy[i];
-				//가려고 하는 곳이 범위 안에 있고 토마토가 들어있으며 아직 방문하지 않은 경우
-				if(nx>=0 && nx<N && ny>=0 && ny<M && arr[nx][ny]==0) {
-					date[nx][ny] += time+1; //하루 더해주기
-					arr[nx][ny] = 1; //방문 처리
-					q.add(new int[] {nx, ny}); //큐에 삽입
-				}
-			}
-		}
-		
-		//토마토 모두 익지 못하는 상황 체크
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if(arr[i][j]==0) { //안익은 토마토 있을 경우
-					System.out.println(-1);
-					return; //-1 출력하고 종료
-				}
-			}
-		}
-		
-		
-		int minDate = 0; //최소 날짜 구하기
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if(minDate<date[i][j]) {
-					minDate = date[i][j];
-				}
-			}
-		}
-		System.out.println(minDate);
 	}
 
 }
