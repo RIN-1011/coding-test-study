@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.stream.Collectors;
 import java.io.*;
 
 public class Main {
@@ -24,7 +23,7 @@ public class Main {
 				q.add(Integer.parseInt(st.nextToken())); //덱에 원소 삽입
 			}
 			
-			int d = 1; //방향(정방향 초기화)
+			boolean direction = true; //방향(정방향 초기화)
 			boolean flag = false; //에러 플래그
 			
 			//함수에 맞는 연산 처리
@@ -32,8 +31,7 @@ public class Main {
 				//뒤집기
 				if(str.charAt(j)=='R') {
 					//방향 전환
-					if(d==-1) d=1;
-					else d=-1;
+					direction = !direction;
 				}
 				//버리기
 				else {
@@ -44,11 +42,11 @@ public class Main {
 						break;
 					}
 					else {
-						if(d==1) { //정방향
+						if(direction) { //정방향
 							//선입선출
 							q.poll();
 						}
-						else if(d==-1) { //역방향
+						else if(!direction) { //역방향
 							//후입선출
 							q.pollLast();
 						}
@@ -57,22 +55,12 @@ public class Main {
 			}
 			//에러 아닌 경우
 			if(!flag) {
-				//정방향 결과 출력
-				if(d==1) {
-					String result = "[" + String.join(",", q.stream()
-                            .map(String::valueOf)
-                            .collect(Collectors.toList())) + "]";
-					sb.append(result).append("\n");
+				sb.append("[");
+				while(!q.isEmpty()) {
+					sb.append(direction ? q.poll():q.pollLast());
+					if(!q.isEmpty()) sb.append(",");
 				}
-				//역방향 결과 출력
-				else if(d==-1) {
-					List<Integer> list = new ArrayList<>(q);
-					Collections.reverse(list);
-					String result = "[" + String.join(",", list.stream()
-                            .map(String::valueOf)
-                            .toArray(String[]::new)) + "]";
-					sb.append(result).append("\n");
-				}
+				sb.append("]").append("\n");
 			}
 		}
 		System.out.println(sb);
