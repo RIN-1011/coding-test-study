@@ -1,55 +1,61 @@
 import java.util.*;
-import java.awt.List;
 import java.io.*;
 
+
 public class Main {
-	static int R, C; //행, 열
-	static int[][] arr; //알파벳 int형으로 저장
-	static boolean visited[] = new boolean[26];; //알파벳 방문 여부
-	static int result = 0; //지날 수 있는 최대 칸 수
+	static int R, C; //세로, 가로
+	static char[][] arr;
+	static boolean visited[]; //알파벳 방문 배열
 	//상하좌우
 	static int[] dx = {-1, 1, 0, 0};
 	static int[] dy = {0, 0, -1, 1};
+	static int result; //최대 이동 횟수
 	
-	public static void dfs(int x, int y, int count) {
-		//이미 방문한 알파벳일 경우
-		if(visited[arr[x][y]]) {
-			result = Math.max(result, count); //최대값 갱신
-			return;
-		}
-		else { //아직 방문 안했을 경우 dfs
-			visited[arr[x][y]] = true; //알파벳 방문 처리
-			for (int i = 0; i < 4; i++) {
-				//4방향 이동
-				int nx = x + dx[i];
-				int ny = y + dy[i];
-				
-				//범위 안에 있을 경우
-				if(nx>=0 && nx<R && ny>=0 && ny<C) {
-					dfs(nx, ny, count+1);
-				}
-			}
-			visited[arr[x][y]] = false; //알파벳 방문 처리
-		}
+	static void dfs(int i, int j, int cnt) {
+		visited[arr[i][j]-'A'] = true; //방문처리
+		result = Math.max(result, cnt); //최대값 갱신
 		
+		//상하좌우 탐색
+		for(int k=0; k<4; k++) {
+			int x = i+dx[k];
+			int y = j+dy[k];
+			
+			//범위 벗어날 경우 패스
+			if(x<0 || x>=R || y<0 || y>=C) {
+				continue;
+			}
+			//이미 방문했을 경우 패스
+			if(visited[arr[x][y]-'A']) {
+				continue;
+			}
+			
+			//경로 더 탐색
+			dfs(x, y, cnt+1);
+		}
+		//다른 경로 더 탐색하기 위한 백트래킹
+		visited[arr[i][j]-'A'] = false;
 	}
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
-		StringBuilder sb = new StringBuilder();
 		
 		st = new StringTokenizer(br.readLine());
-		R = Integer.parseInt(st.nextToken()); //행
-		C = Integer.parseInt(st.nextToken()); //열
-		arr = new int[R][C];
-		for (int i = 0; i < R; i++) {
-			st = new StringTokenizer(br.readLine());
-			String str = st.nextToken();
-			for (int j = 0; j < C; j++) {
-				arr[i][j] = str.charAt(j) - 'A'; //int형으로 변환
+		R = Integer.parseInt(st.nextToken()); //세로
+		C = Integer.parseInt(st.nextToken()); //가로
+		
+		//보드 입력 받기
+		arr = new char[R][C];
+		for(int i=0; i<R; i++) {
+			String str = br.readLine();
+			for(int j=0; j<C; j++) {
+				arr[i][j] = str.charAt(j);
 			}
 		}
-		dfs(0, 0, 0);
+		
+		visited = new boolean[26];
+		result = 0;
+		
+		dfs(0, 0, 1);
 		
 		System.out.println(result);
 	}
