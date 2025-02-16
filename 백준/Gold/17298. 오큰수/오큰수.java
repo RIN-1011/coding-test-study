@@ -10,46 +10,34 @@ public class Main {
 		
 		int N = Integer.parseInt(br.readLine()); //크기
 		
-		//수열 A 입력받기
-		Stack<Integer> s1 = new Stack<>();
+		//수열 입력 (원소, 위치)
+		Deque<int[]> q = new ArrayDeque<>();
+		int[] result = new int[N]; //오큰수 결과 배열
+		
 		st = new StringTokenizer(br.readLine());
 		for(int i=0; i<N; i++) {
-			s1.push(Integer.parseInt(st.nextToken()));
-		}
-
-		Stack<Integer> s2 = new Stack<>();
-		Stack<Integer> result = new Stack();
-		while(!s1.isEmpty()) {
-			int n = s1.pop();
+			int n = Integer.parseInt(st.nextToken());
 			
-			//오큰수가 없을 경우
-			if(s2.isEmpty()) {
-				result.push(-1); //결과 삽입
-				s2.push(n);
+			if(i==0) { //첫 원소일 경우 바로 덱에 삽입
+				q.add(new int[]{n, i});
 			}
 			else {
-				while(!s2.isEmpty()) {
-					//오큰수 있는 경우
-					if(n<s2.peek()) {
-						result.push(s2.peek()); //결과 삽입
-						s2.push(n);
-						break;
-					}
-					//오큰수 찾을 때까지 pop
-					else {
-						s2.pop();
-					}
+				//덱이 비어있지 않고 이전 원소보다 큰 경우 (오큰수)
+				while(!q.isEmpty() && n>q.peekLast()[0]) {
+					int pos = q.pollLast()[1]; //오큰수 찾은 원소 위치
+					result[pos] = n;
 				}
-				//오큰수가 없을 경우
-				if(s2.isEmpty()) {
-					result.push(-1); //결과 삽입
-					s2.push(n);
-				}
+				q.add(new int[]{n, i});
 			}
 		}
+		//오큰수 없는 경우
+		while(!q.isEmpty()) {
+			int pos = q.pollLast()[1];
+			result[pos] = -1;
+		}
 		//결과 출력
-		while(!result.isEmpty()) {
-			sb.append(result.pop()+" ");
+		for(int i=0; i<N; i++) {
+			sb.append(result[i]+" ");
 		}
 		System.out.println(sb);
 	}
